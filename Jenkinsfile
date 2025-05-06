@@ -18,6 +18,12 @@ pipeline {
             }
         }
 
+        stage('Run Docker Container') {
+            steps {
+                sh 'docker run -d -p 3000:3000 --name my-ev-app-container my-ev-application:01'
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 script {
