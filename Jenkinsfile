@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        sh 'docker my-ev-application:01 sankalparava/my-ev-application:01'
+                        sh 'docker tag my-ev-application:01 sankalparava/my-ev-application:01'
                         sh 'docker push sankalparava/my-ev-application:01'
                     }
                 }
