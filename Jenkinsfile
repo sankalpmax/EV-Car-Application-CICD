@@ -16,8 +16,14 @@ pipeline{
 					docker.build('my-ev-application:01')
 			      }
 		       }
-                }
-        }
+
+	stage ('Docker Run'){
+			
+			steps {
+				docker.run("docker run -d -p 3000:3000 --name tesla my-ev-application:01")
+
+			     	}
+                	}
+        	}
+	}
 }
-
-
