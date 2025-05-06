@@ -27,11 +27,13 @@ pipeline {
         stage('Docker Deploy') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        docker.image('my-ev-application:01').push()
-                    }
-                }
-            }
+                    withDockerRegistry([credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/']) {
+				    sh 'docker tag my-ev-application:01 sankalparava/my-ev-application:01'
+   				    sh 'docker push sankalparava/my-ev-application:01'
+					}
+				}
+                	}
+            	}
         }
     }
 }
