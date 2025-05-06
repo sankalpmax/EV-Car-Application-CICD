@@ -22,16 +22,17 @@ pipeline {
                     sh 'docker run -d -p 3000:3000 --name tesla my-ev-application:01'
                 }
             }
+        }
 
-	stage('Docker Deploy'){
-	    steps {
-		script {
-		   	docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials'){
-                         docker.image('my-ev-application:01').push()
-				 		
-						}
-        				}
-    				}
-			}
-		}
-	}
+        stage('Docker Deploy') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        docker.image('my-ev-application:01').push()
+                    }
+                }
+            }
+        }
+    }
+}
+
