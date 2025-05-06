@@ -14,9 +14,10 @@ pipeline{
 			steps {
 				script {
 					docker.build('my-ev-application:01')
-			}
-		}
-         }
+			      }
+		       }
+                }
+        }
 }
 
 
