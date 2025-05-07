@@ -41,8 +41,8 @@ pipeline {
                         --out dependency-check-report
                         --prettyPrint
                         ''', odcInstallation: 'OWASP-DC'
-           		 }
-       		 }
-   	 }
-}
+                    }
+                }
+            }
+        }
 
