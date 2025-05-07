@@ -37,14 +37,21 @@ pipeline {
 
         stage('OWASP Dependency-Check') {
             steps {
-        	        sh 'mkdir -p dependency-check-report'
-			sh """
-    			./dependency-check/bin/dependency-check.sh \
-    			--project MyApp \
-    			--scan . \
-    			--format HTML \
-    			--out dependency-check-report
-			"""
+        	              // Download and extract OWASP Dependency-Check
+       		 sh '''
+           	 DEPENDENCY_CHECK_VERSION="8.4.0"
+           	 wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v${DEPENDENCY_CHECK_VERSION}/dependency-check-${DEPENDENCY_CHECK_VERSION}-release.zip
+         	 unzip -q dependency-check-${DEPENDENCY_CHECK_VERSION}-release.zip
+       		 '''
+
+        	// Run the dependency-check scan
+       		 sh '''
+           	 ./dependency-check/bin/dependency-check.sh \
+           	 --project "MyApp" \
+           	 --scan . \
+            	--format HTML \
+            	--out dependency-check-report
+        	'''
 			 }
        		 }
    	 } // End of stages
