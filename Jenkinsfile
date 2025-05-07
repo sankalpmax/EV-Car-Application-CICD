@@ -32,17 +32,22 @@ pipeline {
                         sh 'docker push sankalparava/my-ev-application:01'
                     }
                 }
-	stage ('OWASP-Dependency Check'){
-		steps {
-			dependencyCheck additionalArguments: '''
-                        --project "EV-Car-Application"
-                        --scan . 
-                        --format ALL 
-                        --out dependency-check-report
-                        --prettyPrint
-                        ''', odcInstallation: 'OWASP-DC'
-                    }
-                }
             }
         }
+
+        stage('OWASP Dependency-Check') {
+            steps {
+                dependencyCheck additionalArguments: '''
+                    --project "EV-Car-Application"
+                    --scan . 
+                    --format ALL 
+                    --out dependency-check-report
+                    --prettyPrint
+                ''', odcInstallation: 'OWASP-DC'
+
+                dependencyCheckPublisher pattern: 'dependency-check-report/dependency-check-report.xml'
+            }
+        }
+    } // End of stages
+} // End of pipeline
 
