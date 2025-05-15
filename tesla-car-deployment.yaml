@@ -1,0 +1,19 @@
+apiVersion: apps/v1           
+kind: Deployment
+metadata:
+  name: tesla-car-deployment
+spec:
+  replicas: 2            
+  selector:
+    matchLabels:
+      app: tesla-car-deployment
+  template:
+    metadata:
+      labels:
+        app: tesla-car-deployment 
+    spec:
+      containers:
+        - name: tesla-container
+          image: sankalparava/ev-car:02
+          ports:
+            - containerPort: 80
