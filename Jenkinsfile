@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "sankalparava/my-ev-application:01"
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
     stages {
@@ -12,47 +12,37 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Docker Build Image') {
             steps {
-                sh 'docker build -t my-ev-application:01 .'
+                sh 'docker build -t sankalparava/ev-car:02 .'
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Docker Run Container') {
             steps {
-                sh 'docker run -d -p 3000:3000 --name my-ev-app-container my-ev-application:01'
+                sh '''
+                docker run -d -p 3000:3000 --name tesla sankalparava/ev-car:02
+                '''
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Docker Push') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        sh 'docker tag my-ev-application:01 sankalparava/my-ev-application:01'
-                        sh 'docker push sankalparava/my-ev-application:01'
+                        sh 'docker push sankalparava/ev-car:02'
                     }
                 }
             }
         }
 
-        stage('OWASP Dependency-Check') {
+        stage('Kubernetes Deploy') {
             steps {
-        	              // Download and extract OWASP Dependency-Check
-       		 sh '''
-           	 DEPENDENCY_CHECK_VERSION="8.4.0"
-           	 wget -q https://github.com/jeremylong/DependencyCheck/releases/download/v${DEPENDENCY_CHECK_VERSION}/dependency-check-${DEPENDENCY_CHECK_VERSION}-release.zip
-         	 unzip -q dependency-check-${DEPENDENCY_CHECK_VERSION}-release.zip
-       		 '''
-
-        	// Run the dependency-check scan
-       		 sh '''
-           	 ./dependency-check/bin/dependency-check.sh \
-           	 --project "MyApp" \
-           	 --scan . \
-            	--format HTML \
-            	--out dependency-check-report
-        	'''
-			 }
-       		 }
-   	 } // End of stages
-} // End of pipeline
+                sh '''
+                kubectl apply -f tesla-car-deployment.yaml
+     		kubectl apply -f tesla-car-service.yaml           
+                '''
+            }
+        }
+    }
+}
